@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: svelte-app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - NODE_ENV=development
+    networks:
+      - sveltekit
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+    environment:
+      - NODE_ENV=development
+      - PORT=5173
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./src:/app/src
+      - ./static:/app/static
+      - ./vite.config.js:/app/vite.config.js
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./svelte.config.js:/app/svelte.config.js
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgressql/data
+    ports:
+      - '6500:5432'
+    env_file:
+      - ./.env
+    networks:
+      - sveltekit
+    environment:
+      DATABASE_URL: $DATABASE_URL
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - '5050:80'
+    env_file:
+      - ./.env
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - sveltekit
+volumes:
+  postgres:
+  pgadmin-data:
+networks:
+  sveltekit:

@@ -1,0 +1,13 @@
+.eslint*
+.git
+.git*
+.prettier*
+.svelte-kit
+.vscode
+build
+Dockerfile*
+docker-compose.yml
+node_modules
+npm-debug.log
+public
+README.md
